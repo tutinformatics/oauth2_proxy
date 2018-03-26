@@ -5,14 +5,14 @@
 ### Süsteemiarhitektuur
 Oauth2_proxy liiklust võib seadistada erinevatel viisidel, süsteemi ülesehituse osas võib kasutada näiteks mõnda järgnevast võimalusest:
 
-1. Kõik päringud käivad läbi oauth2_proxy. Konfiguratsiooni poolest lihtne, sobib rakendustele, millele peaksid ligi pääsema ainult sisse logitud kasutajad. Suurte mahtude korral võib proxy muutuda  märkimisväärselt ressursinõudlikuks. Ei ole soovitatav Oauth2_proxyt ilma sellele eelneva veebiserverita kasutada.
-1. Backend server oauth2_proxy taga. Frontend ja staatiline sisu serveeritakse otse ja backend läbi Oauth2 proxy. Selle lahenduse puhul ei vaja proxy nii palju ressurssi, samal ajal kogu serveri poolel töötavale rakendusele ligipääs on proxy abil turvatud.
+1. Kõik päringud käivad läbi oauth2_proxy. Konfiguratsiooni poolest lihtne, sobib rakendustele, millele peaksid ligi pääsema ainult sisse logitud kasutajad. Suurte mahtude korral võib _proxy_ muutuda  märkimisväärselt ressursinõudlikuks. Ei ole soovitatav Oauth2_proxyt ilma sellele eelneva veebiserverita kasutada.
+1. Backend server oauth2_proxy taga. Frontend ja staatiline sisu serveeritakse otse ja backend läbi Oauth2 proxy. Selle lahenduse puhul ei vaja _proxy_ nii palju ressurssi, samal ajal kogu serveri poolel töötavale rakendusele ligipääs on _proxy_ abil turvatud.
 1. Sisse logimise meetod läbib oauth2_proxy, seal luuakse kasutajale näiteks lisaks oauth2_sessioonile  ka rakenduse sessioon või kasutatakse mõnd teist lähenemist. Ülejäänud rakendus töötab otse ja iseseisvalt. Selle lahenduse puhul peab arvestama, et oauth2_proxy serveerib ise html lehte, mis suunab sisse logimiseks väliste teenusepakkujate juurde ja sealt tagasi. Seega ei saa sisse logimist niisama lihtsalt taustal ajax päringuga teostada, vaid sisse logimise ajaks tuleb kontroll kogu veebisisu üle oauth2_proxy kätte usaldada.
 
-### Nginx kasutamine Oauth2_proxy eesmise _reverse proxy_-na  (LBS).
+### Nginx kasutamine Oauth2_proxy eesmise _reverse proxy_-na
 
 Veebiliikluse reguleerimiseks ja suunamiseks kasutatakse tihti Nginx veebiserveri tarkvara. Nginx konfiguratsioon on tavapäraselt jagatud erinevateks saitideks failidesse, mis koosnevad direktiivide plokkidest. Oauth2_proxy liikluse oma rakendusse suunamiseks Nginx abil on võimalik kasutada kahte erinevat lähenemist:
-1. _proxy_pass_ on harilik ja levinud nginx direktiiv, mis suunab antud ploki liikluse defineeritud _proxy_sse koos defineeritavate parameetritega. Sealt edasi suunamine on defineeritud juba oauth2_proxy konfiguratsioonis ja võib toimuda otse või Nginx kaudu rakendussse. Järgnevas Nginx konfiguratsiooninäites on oauth2_proxy defineeritud kuulama `localhost` pordil 4180. Näit:
+1. _proxy_pass_ on harilik ja levinud nginx direktiiv, mis suunab antud ploki liikluse defineeritud _proxy_-sse koos kaasa antavate parameetritega. Sealt edasi suunamine on seadistatud juba oauth2_proxy konfiguratsioonis ja võib toimuda rakendusse otse või Nginx kaudu. Järgnevas Nginx konfiguratsiooninäites on oauth2_proxy defineeritud kuulama `localhost` pordil 4180. Näit:
    ```
         upstream oauth2_proxy {
          server 127.0.0.1:4180;
@@ -23,7 +23,7 @@ Veebiliikluse reguleerimiseks ja suunamiseks kasutatakse tihti Nginx veebiserver
             include proxy_params;
         }
    ```
-1. _auth_request_ direktiivi kaudu, mis võimaldab Nginx-l autentida päringuid ilma kogu liiklust läbi proxy suunamata, vaid kasutades oauth2_proxy `/auth` sihtpunkti, mis vastab vastavalt accepted või unauthorized. Näit:
+1. _auth_request_ direktiivi kaudu, mis võimaldab Nginx-l autentida päringuid ilma kogu liiklust läbi _proxy_ suunamata, vaid kasutades oauth2_proxy `/auth` sihtpunkti, mis vastab vastavalt _accepted_ või _unauthorized_. Näit:
    ```
     location = /login {
 
