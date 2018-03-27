@@ -59,3 +59,13 @@ Linuxis näit:
 `./bin/oauth2_proxy -config conf/oauth2_proxy/oauth2_proxy.conf`
 
 * Käivitage oma Spring Boot rakendus pordil 8080 või näidiseks toodud [Pythoni rakendus](https://github.com/tutinformatics/oauth2_proxy/tree/master/backend). Minge brauseriga http://local.example.com/ ja näete ilma oauth2_proxy-ta päringut ja oauth2_proxy-ga loginit. Kasutajainfo pannakse päringu päisesse nii avatud kujul, kui kasutajanimi ka _Basic Authorization_ päises.
+
+### KKK
+* *...proxy_params" failed (2: No such file or directory)* Kõikidel platvormidel seda faili ei ole, asendage local.example.coom.conf failis see rida järgmiste ridadega:
+    ```
+    proxy_set_header Host $http_host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    ```
+* *Python rakendus annab _syntax error_-i.* Kasutatud süntaks vajab Python 3.5 või uuemat.    
